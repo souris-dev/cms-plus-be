@@ -3,30 +3,26 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class ContentType extends Model {
+  class ContentInstance extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      ContentType.hasMany(models.ContentInstance, {
+      ContentInstance.belongsTo(models.ContentType);
+      ContentInstance.hasMany(models.InstanceData, {
+        foreignKey: 'instanceId',
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-        foreignKey: 'contentTypeId'
-      });
-      ContentType.hasMany(models.Field, {
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-        foreignKey: 'contentTypeId'
+        onUpdate: 'CASCADE'
       });
     }
   }
-  ContentType.init({
-    name: DataTypes.STRING
+  ContentInstance.init({
+    contentTypeId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'ContentType',
+    modelName: 'ContentInstance',
   });
-  return ContentType;
+  return ContentInstance;
 };
