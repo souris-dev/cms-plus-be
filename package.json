@@ -8,13 +8,14 @@
     "start": "node src/app.js",
     "test": "jest --coverage --verbose",
     "test:watch": "jest --watch",
-    "docker:migrate": "sequelize db:migrate"
+    "migrations": "sequelize db:migrate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
+    "joi": "^17.8.3",
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.29.1"

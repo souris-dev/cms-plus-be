@@ -11,6 +11,4 @@ RUN npm install
 COPY . .
 COPY database ./database
 
-RUN npm run build
-
-ENTRYPOINT [ "npm", "run", "docker:migrate" ]
+ENTRYPOINT [ "npm", "run", "migrations" ]
