@@ -1,5 +1,5 @@
 import express from 'express';
-import cmsRoute from './routes/route.js';
+import cmsRoute from './routes/cmsRoute.js';
 
 const app = express();
 app.use(express.json());
