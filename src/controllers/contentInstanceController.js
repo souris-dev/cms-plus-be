@@ -1,4 +1,4 @@
-import contentInstanceService from '../services/contentInstanceService';
+import contentInstanceService from '../services/contentInstanceService.js';
 
 /**
  * Create an instance of a content type given its content type ID.
@@ -7,7 +7,10 @@ import contentInstanceService from '../services/contentInstanceService';
  */
 export const createInstanceController = async (req, res) => {
   const contentTypeId = req.params.contentTypeId;
+
+  /** @type {import('../services/contentInstanceService').ContentInstanceInfo} */
   const creationInfo = req.body;
+  creationInfo.contentTypeId = contentTypeId;
 
   const contentInstance = await contentInstanceService.createInstance(contentTypeId, creationInfo);
 

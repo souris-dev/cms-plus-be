@@ -1,5 +1,6 @@
-import { ContentType, Field } from '../../database/models';
-import { ServerError } from '../utils/errors';
+import models from '../../database/models/index.js';
+const { ContentType, Field } = models;
+import { ServerError } from '../utils/errors.js';
 
 /**
  * @typedef FieldInfo

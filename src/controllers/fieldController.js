@@ -1,4 +1,4 @@
-import contentTypeService from '../services/contentTypeService';
+import contentTypeService from '../services/contentTypeService.js';
 
 /**
  * Create a field in a content type.

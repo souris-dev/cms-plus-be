@@ -1,6 +1,8 @@
-import { Field, InstanceData, ContentInstance } from '../../database/models';
-import { ServerError } from '../utils/errors';
-import contentTypeService from './contentTypeService';
+import models from '../../database/models/index.js';
+const { Field, InstanceData, ContentInstance } = models;
+
+import { ServerError } from '../utils/errors.js';
+import contentTypeService from './contentTypeService.js';
 
 /**
  * @typedef InstanceDataEntry

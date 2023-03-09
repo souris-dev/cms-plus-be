@@ -1,12 +1,12 @@
-import contentTypeService from '../services/contentTypeService';
+import contentTypeService from '../services/contentTypeService.js';
 
 /**
  * Create a content type. 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */
-export const createContentType = async (req, res) => {
-  /** @type {contentTypeService.ContentTypeInfo} */
+export const createContentTypeController = async (req, res) => {
+  /** @type {import('../services/contentTypeService').ContentTypeInfo} */
   const contentTypeInfo = req.body;
   const contentTypeCreated = await contentTypeService.createContentType(contentTypeInfo);
 
@@ -15,11 +15,24 @@ export const createContentType = async (req, res) => {
 };
 
 /**
+ * Get a content type by ID. 
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
+export const getContentTypeController = async (req, res) => {
+  const contentTypeId = req.params.contentTypeId;
+  const contentType = await contentTypeService.getContentTypeOrThrow(contentTypeId);
+
+  res.status(200);
+  res.json(contentType);
+};
+
+/**
  * Create a content type. 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */
-export const updateContentType = async (req, res) => {
+export const updateContentTypeController = async (req, res) => {
   const contentTypeId = req.params.contentTypeId;
 
   /**
@@ -40,7 +53,7 @@ export const updateContentType = async (req, res) => {
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */
-export const listContentTypes = async (req, res) => {
+export const listContentTypesController = async (req, res) => {
   const contentTypes = await contentTypeService.getAllContentTypes();
 
   res.status(200);
