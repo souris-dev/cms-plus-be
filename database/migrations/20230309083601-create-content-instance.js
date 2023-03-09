@@ -10,7 +10,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       contentTypeId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

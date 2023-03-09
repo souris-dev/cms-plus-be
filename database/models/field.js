@@ -10,7 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Field.belongsTo(models.ContentType);
+      Field.belongsTo(models.ContentType, {
+        foreignKey: 'contentTypeId'
+      });
       Field.hasMany(models.InstanceData, {
         foreignKey: 'fieldId',
         onDelete: 'CASCADE',
