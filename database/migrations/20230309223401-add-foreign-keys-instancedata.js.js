@@ -3,11 +3,11 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.addColumn('InstanceData', 'contentTypeId', {
+    await queryInterface.addColumn('InstanceData', 'instanceId', {
       type: Sequelize.INTEGER,
       references: {
         model: {
-          tableName: 'ContentTypes'
+          tableName: 'ContentInstances'
         },
         key: 'id'
       },
