@@ -1,13 +1,16 @@
 const requestSchemaValidator = (options) => async (req, res, next) => {
+  console.log(req.url);
   const postSchema = options.postBodySchema;
   const patchSchema = options.patchBodySchema;
   const putSchema = options.putBodySchema;
+
+  console.log(Object.keys(options));
   
   const reqParamSchema = options.reqParamSchema;
   const bodyValidators = {
-    'POST': async (body) => await postSchema.validateAsync(body),
-    'PUT': async (body) => await putSchema.validateAsync(body),
-    'PATCH': async (body) => await patchSchema.validateAsync(body)
+    'POST': async (body) => await postSchema?.validateAsync(body),
+    'PUT': async (body) => await putSchema?.validateAsync(body),
+    'PATCH': async (body) => await patchSchema?.validateAsync(body)
   };
 
   try {

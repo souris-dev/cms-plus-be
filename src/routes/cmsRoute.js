@@ -59,7 +59,7 @@ cmsRoute.use(FIELD_CREATE_LIST_ROUTE, requestSchemaValidator({
 cmsRoute.post(FIELD_CREATE_LIST_ROUTE, createFieldController);
 cmsRoute.get(FIELD_CREATE_LIST_ROUTE, listContentTypeFieldsController);
 
-const FIELD_RUD_ROUTE = '/contentType/:contentTypeId/field/:fieldName';
+const FIELD_RUD_ROUTE = '/contentType/:contentTypeId/field/:fieldId';
 
 cmsRoute.use(FIELD_RUD_ROUTE, requestSchemaValidator({
   reqParamsSchema: removeFieldUrlSchema,

@@ -111,15 +111,15 @@ class ContentTypeService {
   /**
    * Delete a field from a content type.
    * @param {number} contentTypeId 
-   * @param {string} fieldName 
+   * @param {number} fieldId
    */
-  async deleteField(contentTypeId, fieldName) {
+  async deleteField(contentTypeId, fieldId) {
     const contentType = await this.getContentTypeOrThrow(contentTypeId);
     await this.throwIfInstancesExist(contentType);
     
     const field = await Field.findOne({
       where: {
-        name: fieldName,
+        id: fieldId,
         contentTypeId: contentTypeId
       }
     });
@@ -132,16 +132,16 @@ class ContentTypeService {
   /**
    * Rename a field in a content type.
    * @param {number} contentTypeId 
-   * @param {string} currentFieldName 
+   * @param {number} fieldId
    * @param {string} newFieldName 
    * @returns field info of the new field.
    */
-  async renameField(contentTypeId, currentFieldName, newFieldName) {
+  async renameField(contentTypeId, fieldId, newFieldName) {
     this.throwIfInstancesExist(await this.getContentTypeOrThrow(contentTypeId));
     
     const field = await Field.findOne({
       where: {
-        name: currentFieldName,
+        id: fieldId,
         contentTypeId: contentTypeId
       }
     });
