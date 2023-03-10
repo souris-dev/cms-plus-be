@@ -72,8 +72,12 @@ export const modifyInstanceUrlSchema = Joi.object({
 });
 
 export const modifyInstanceSchema = Joi.object({
-  fieldName: Joi.string().min(1).required(),
-  newValue: Joi.string().required()
+  updates: Joi.array().items(
+    Joi.object({
+      fieldName: Joi.string().min(1).required(),
+      newValue: Joi.string().required()
+    })
+  )
 });
 
 export const deleteInstanceUrlSchema = Joi.object({

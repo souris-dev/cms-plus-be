@@ -31,16 +31,23 @@ export const modifyInstanceController = withErrorHandling(
     const instanceId = req.params.instanceId;
   
     /**
-     * @typedef ModifyInstanceRequestBody
+     * @typedef ModifyInstanceRequest
      * @type {object}
      * @property {string} fieldName
      * @property {string} newValue
      */
+
+    /**
+     * @typedef ModifyInstanceRequestBody
+     * @type {object}
+     * @property {ModifyInstanceRequest[]} updates
+     */
+
     /** @type {ModifyInstanceRequestBody} */
-    const modificationInfo = req.body;
+    const modificationInfo = req.body.updates;
   
     const modifiedInstance = await contentInstanceService
-      .modifyInstance(contentTypeId, instanceId, modificationInfo.fieldName, modificationInfo.newValue);
+      .modifyInstance(contentTypeId, instanceId, modificationInfo);
   
     res.status(200);
     res.json(modifiedInstance);

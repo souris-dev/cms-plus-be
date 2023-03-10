@@ -38,20 +38,29 @@ import {
 
 const cmsRoute = express.Router();
 
-cmsRoute.get('/contentTypes', listContentTypesController);
+const INSTANCE_CREATE_ROUTE = '/contentType/:contentTypeId/instances';
 
-cmsRoute.use('/contentType/:contentTypeId', requestSchemaValidator({
-  reqParamsSchema: getContentTypeUrlSchema,
-  patchBodySchema: updateContentTypeSchema,
-  putBodySchema: updateContentTypeSchema
+cmsRoute.use(INSTANCE_CREATE_ROUTE, requestSchemaValidator({
+  reqParamsSchema: createInstanceUrlSchema,
+  postBodySchema: createInstanceSchema
+}));
+cmsRoute.post(INSTANCE_CREATE_ROUTE, createInstanceController);
+cmsRoute.get(INSTANCE_CREATE_ROUTE, listInstancesController);
+
+const INSTANCE_RUD_ROUTE = '/contentType/:contentTypeId/instance/:instanceId';
+
+cmsRoute.use(INSTANCE_RUD_ROUTE, requestSchemaValidator({
+  reqParamsSchema: modifyInstanceUrlSchema,
+  patchBodySchema: modifyInstanceSchema,
+  putBodySchema: modifyInstanceSchema,
 }));
 
-cmsRoute.get('/contentType/:contentTypeId', getContentTypeController);
+cmsRoute.patch(INSTANCE_RUD_ROUTE, modifyInstanceController);
+cmsRoute.put(INSTANCE_RUD_ROUTE, modifyInstanceController);
+cmsRoute.delete(INSTANCE_RUD_ROUTE, deleteInstanceController);
+cmsRoute.get(INSTANCE_RUD_ROUTE, getInstanceController);
 
-cmsRoute.use('/contentTypes', requestSchemaValidator({ 
-  postBodySchema: createContentTypeSchema
-}));
-cmsRoute.post('/contentTypes', createContentTypeController);
+
 
 const FIELD_CREATE_LIST_ROUTE = '/contentType/:contentTypeId/fields';
 
@@ -74,26 +83,21 @@ cmsRoute.patch(FIELD_RUD_ROUTE, renameFieldController);
 cmsRoute.put(FIELD_RUD_ROUTE, renameFieldController);
 cmsRoute.delete(FIELD_RUD_ROUTE, removeFieldController);
 
-const INSTANCE_CREATE_ROUTE = '/contentType/:contentTypeId/instances';
 
-cmsRoute.use(INSTANCE_CREATE_ROUTE, requestSchemaValidator({
-  reqParamsSchema: createInstanceUrlSchema,
-  postBodySchema: createInstanceSchema
-}));
-cmsRoute.post(INSTANCE_CREATE_ROUTE, createInstanceController);
-cmsRoute.get(INSTANCE_CREATE_ROUTE, listInstancesController);
 
-const INSTANCE_RUD_ROUTE = '/contentType/:contentTypeId/instance/:instanceId';
+cmsRoute.get('/contentTypes', listContentTypesController);
 
-cmsRoute.use(INSTANCE_RUD_ROUTE, requestSchemaValidator({
-  reqParamsSchema: modifyInstanceUrlSchema,
-  patchBodySchema: modifyInstanceSchema,
-  putBodySchema: modifyInstanceSchema,
+cmsRoute.use('/contentType/:contentTypeId', requestSchemaValidator({
+  reqParamsSchema: getContentTypeUrlSchema,
+  patchBodySchema: updateContentTypeSchema,
+  putBodySchema: updateContentTypeSchema
 }));
 
-cmsRoute.patch(INSTANCE_RUD_ROUTE, modifyInstanceController);
-cmsRoute.put(INSTANCE_RUD_ROUTE, modifyInstanceController);
-cmsRoute.delete(INSTANCE_RUD_ROUTE, deleteInstanceController);
-cmsRoute.get(INSTANCE_RUD_ROUTE, getInstanceController);
+cmsRoute.get('/contentType/:contentTypeId', getContentTypeController);
+
+cmsRoute.use('/contentTypes', requestSchemaValidator({ 
+  postBodySchema: createContentTypeSchema
+}));
+cmsRoute.post('/contentTypes', createContentTypeController);
 
 export default cmsRoute;

@@ -36,27 +36,10 @@ class ContentInstanceService {
 
     /** @type {ContentInstanceInfo[]} */
     const results = await Promise.all(instances.map(async (instanceInfo) => {
-      const data = await InstanceData.findAll({
-        where: {
-          instanceId: instanceInfo.id,
-        },
-        attributes: ['value'],
-        include: {
-          model: Field,
-          attributes: [['name', 'fieldName']],
-          // right outer join:
-          required: false,
-          right: true
-        }
-      });
-
+      const data = await this.getInstanceWithInstanceId(contentTypeId, instanceInfo.id);
+      data.contentTypeName = contentType.name;
       /** @type {ContentInstanceInfo} */
-      return {
-        contentTypeId: contentTypeId,
-        contentTypeName: contentType.name,
-        instanceId: instanceInfo.id,
-        data: [...data]
-      };
+      return data;
     }));
 
     return results;
@@ -64,10 +47,15 @@ class ContentInstanceService {
 
   /**
    * Get instance with the given instance ID.
+   * @param {numner} contentTypeId
    * @param {number} instanceId 
    */
   async getInstanceWithInstanceId(contentTypeId, instanceId) {
-    const data = await InstanceData.findAll({
+    const contentType = await contentTypeService.getContentTypeOrThrow(contentTypeId);
+    const fieldsOfContentType = await contentTypeService.getAllFields(contentTypeId);
+    const fieldsIncluded = new Set();
+
+    const data = (await InstanceData.findAll({
       where: {
         instanceId: instanceId
       },
@@ -79,11 +67,28 @@ class ContentInstanceService {
         required: false,
         right: true
       }
+    })).map((elem) => {
+      const fieldName = elem.Field.dataValues.fieldName;
+      fieldsIncluded.add(fieldName);
+      return {
+        value: elem.value,
+        fieldName: fieldName
+      };
+    });
+
+    fieldsOfContentType.forEach((field) => {
+      if (!fieldsIncluded.has(field.name)) {
+        data.push({
+          value: '',
+          fieldName: field.name
+        });
+      }
     });
 
     /** @type {ContentInstanceInfo} */
     return {
       contentTypeId: contentTypeId,
+      contentTypeName: contentType.name,
       instanceId: instanceId,
       data: [...data]
     };
@@ -130,36 +135,47 @@ class ContentInstanceService {
   }
 
   /**
+   * @typedef ModificationInfo
+   * @type {object}
+   * @property {string} fieldName
+   * @property {string} newValue
+   */
+
+  /**
    * Modify an instance.
    * @param {number} contentTypeId 
    * @param {number} instanceId 
-   * @param {string} fieldName 
-   * @param {string} newValue 
+   * @param {ModificationInfo[]} modificationInfo
    * @returns modified instance.
    */
-  async modifyInstance(contentTypeId, instanceId, fieldName, newValue) {
-    const fieldId = (await Field.findOne({
-      where: {
-        contentTypeId: contentTypeId,
-        name: fieldName
-      },
-      attributes: ['id']
-    }))?.id;
+  async modifyInstance(contentTypeId, instanceId, modificationInfo) {
+    // TODO: should make this a transaction
+    for await (const modifictionInfoEntry of modificationInfo) {
+      const fieldName = modifictionInfoEntry.fieldName;
+      const newValue = modifictionInfoEntry.newValue;
 
-    if (fieldId === null || fieldId === undefined) {
-      throw new ServerError('Wrong field name given for the given content type. Bad request.', 422);
-    }
-
-    const instanceData = await InstanceData.findOne({
-      where: {
-        instanceId: instanceId,
-        fieldId: fieldId
+      const fieldId = (await Field.findOne({
+        where: {
+          contentTypeId: contentTypeId,
+          name: fieldName
+        },
+        attributes: ['id']
+      }))?.id;
+  
+      if (fieldId === null || fieldId === undefined) {
+        throw new ServerError('Wrong field name given for the given content type. Bad request.', 422);
       }
-    });
-
-    instanceData.value = newValue;
-
-    await instanceData.save();
+  
+      const instanceData = await InstanceData.findOne({
+        where: {
+          instanceId: instanceId,
+          fieldId: fieldId
+        }
+      });
+  
+      instanceData.value = newValue;
+      await instanceData.save();
+    }
 
     return await this.getInstanceWithInstanceId(contentTypeId, instanceId);
   }
@@ -181,7 +197,7 @@ class ContentInstanceService {
     await ContentInstance.destroy({
       where: {
         contentTypeId: contentTypeId,
-        instanceId: instanceId
+        id: instanceId
       }
     });
 
