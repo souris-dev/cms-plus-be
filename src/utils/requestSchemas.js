@@ -4,10 +4,10 @@ import Joi from 'joi';
 // Content type schemas
 //------------------------------
 export const createContentTypeSchema = Joi.object({
-  name: Joi.string().min(1).alphanum().required(),
+  name: Joi.string().min(1).required(),
   fields: Joi.array().items(
     Joi.object({
-      name: Joi.string().min(1).alphanum().required()
+      name: Joi.string().min(1).required()
     })
   )
 });
@@ -17,7 +17,7 @@ export const getContentTypeUrlSchema = Joi.object({
 });
 
 export const updateContentTypeSchema = Joi.object({
-  name: Joi.string().min(1).alphanum().required()
+  name: Joi.string().min(1).required()
 });
 
 export const updateContentTypeUrlSchema = Joi.object({
@@ -28,7 +28,7 @@ export const updateContentTypeUrlSchema = Joi.object({
 // Field schemas
 //-----------------------------
 export const createFieldSchema = Joi.object({
-  name: Joi.string().min(1).alphanum().required()
+  name: Joi.string().min(1).required()
 });
 
 export const createFieldUrlSchema = Joi.object({
@@ -37,16 +37,16 @@ export const createFieldUrlSchema = Joi.object({
 
 export const removeFieldUrlSchema = Joi.object({
   contentTypeId: Joi.number().required(),
-  fieldName: Joi.string().min(1).alphanum().required()
+  fieldName: Joi.string().min(1).required()
 });
 
 export const renameFieldUrlSchema = Joi.object({
   contentTypeId: Joi.number().required(),
-  fieldName: Joi.string().min(1).alphanum().required()
+  fieldName: Joi.string().min(1).required()
 });
 
 export const renameFieldSchema = Joi.object({
-  name: Joi.string().min(1).alphanum().required()
+  name: Joi.string().min(1).required()
 });
 
 //-----------------------------
@@ -56,7 +56,7 @@ export const createInstanceSchema = Joi.object({
   contentTypeId: Joi.number(),
   data: Joi.array().items(
     Joi.object({
-      fieldName: Joi.string().min(1).alphanum().required(),
+      fieldName: Joi.string().min(1).required(),
       value: Joi.string().required()
     })
   )
@@ -72,7 +72,7 @@ export const modifyInstanceUrlSchema = Joi.object({
 });
 
 export const modifyInstanceSchema = Joi.object({
-  fieldName: Joi.string().min(1).alphanum().required(),
+  fieldName: Joi.string().min(1).required(),
   newValue: Joi.string().required()
 });
 

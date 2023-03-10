@@ -15,10 +15,11 @@ const requestSchemaValidator = (options) => async (req, res, next) => {
       await bodyValidators[req.method](req.body);
     }
 
-    if (req.params || options.checkReqParams) {
+    if ((req.params || options.checkReqParams) && reqParamSchema) {
       await reqParamSchema.validateAsync(req.params);
     }
   } catch(err) {
+    console.error(err);
     res.status(400);
     res.json({ error: err.message });
     return;
