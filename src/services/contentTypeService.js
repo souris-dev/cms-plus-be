@@ -111,6 +111,8 @@ class ContentTypeService {
       throw new ServerError('Content type with given ID not found.', 404);
     }
 
+    contentType.numInstances = await contentType.countContentInstances();
+
     return contentType;
   }
 
