@@ -114,8 +114,7 @@ class ContentTypeService {
    * @param {number} fieldId
    */
   async deleteField(contentTypeId, fieldId) {
-    const contentType = await this.getContentTypeOrThrow(contentTypeId);
-    await this.throwIfInstancesExist(contentType);
+    await this.getContentTypeOrThrow(contentTypeId);
 
     const field = await Field.findOne({
       where: {
@@ -148,7 +147,7 @@ class ContentTypeService {
    * @returns field info of the new field.
    */
   async renameField(contentTypeId, fieldId, newFieldName) {
-    this.throwIfInstancesExist(await this.getContentTypeOrThrow(contentTypeId));
+    await this.throwIfInstancesExist(await this.getContentTypeOrThrow(contentTypeId));
     
     const field = await Field.findOne({
       where: {

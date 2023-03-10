@@ -2,6 +2,7 @@ import * as express from 'express';
 import { 
   createInstanceController,
   deleteInstanceController, 
+  listInstancesController, 
   modifyInstanceController 
 } from '../controllers/contentInstanceController.js';
 
@@ -79,6 +80,7 @@ cmsRoute.use(INSTANCE_CREATE_ROUTE, requestSchemaValidator({
   postBodySchema: createInstanceSchema
 }));
 cmsRoute.post(INSTANCE_CREATE_ROUTE, createInstanceController);
+cmsRoute.get(INSTANCE_CREATE_ROUTE, listInstancesController);
 
 const INSTANCE_RUD_ROUTE = '/contentType/:contentTypeId/instance/:instanceId';
 

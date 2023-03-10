@@ -80,3 +80,19 @@ export const deleteInstanceController = withErrorHandling(
     res.json(instance);
   }
 );
+
+/**
+ * Fetch all instances of a content type.
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
+export const listInstancesController = withErrorHandling(
+  async (req, res) => {
+    const contentTypeId = req.params.contentTypeId;
+  
+    const instances = await contentInstanceService.getAllInstances(contentTypeId);
+  
+    res.status(200);
+    res.json(instances);
+  }
+);
