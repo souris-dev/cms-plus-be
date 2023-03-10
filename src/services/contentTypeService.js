@@ -21,8 +21,22 @@ class ContentTypeService {
    * @returns all content types.
    */
   async getAllContentTypes() {
-    const contentTypes = await ContentType.findAll();
-    return contentTypes;
+    const contentTypes = await ContentType.findAll({
+      order: [['createdAt', 'ASC']]
+    });
+
+    const data = [];
+
+    for await (let contentType of contentTypes) {
+      const numInstances = await contentType.countContentInstances();
+      data.push({
+        name: contentType.name,
+        id: contentType.id,
+        numInstances: numInstances
+      });
+    }
+
+    return data;
   }
 
   /**
