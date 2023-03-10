@@ -1,5 +1,5 @@
 import models from '../../database/models/index.js';
-const { ContentType, Field } = models;
+const { ContentType, Field, InstanceData } = models;
 import { ServerError } from '../utils/errors.js';
 
 /**
@@ -116,15 +116,26 @@ class ContentTypeService {
   async deleteField(contentTypeId, fieldId) {
     const contentType = await this.getContentTypeOrThrow(contentTypeId);
     await this.throwIfInstancesExist(contentType);
-    
+
     const field = await Field.findOne({
+      where: {
+        id: fieldId
+      }
+    });
+    
+    await Field.destroy({
       where: {
         id: fieldId,
         contentTypeId: contentTypeId
       }
     });
     
-    await contentType.removeField(field);
+    // also clear that data
+    await InstanceData.destroy({
+      where: {
+        fieldId: fieldId
+      }
+    });
 
     return field;
   }
