@@ -2,6 +2,7 @@ import * as express from 'express';
 import { 
   createInstanceController,
   deleteInstanceController, 
+  getInstanceController, 
   listInstancesController, 
   modifyInstanceController 
 } from '../controllers/contentInstanceController.js';
@@ -93,5 +94,6 @@ cmsRoute.use(INSTANCE_RUD_ROUTE, requestSchemaValidator({
 cmsRoute.patch(INSTANCE_RUD_ROUTE, modifyInstanceController);
 cmsRoute.put(INSTANCE_RUD_ROUTE, modifyInstanceController);
 cmsRoute.delete(INSTANCE_RUD_ROUTE, deleteInstanceController);
+cmsRoute.get(INSTANCE_RUD_ROUTE, getInstanceController);
 
 export default cmsRoute;
