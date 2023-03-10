@@ -31,14 +31,31 @@ class ContentTypeService {
    * @returns created object.
    */
   async createContentType(contentType) {
+    // need to have the property Fields (with F in uppercase)
+    // for sequelize to create the fields as well.
+    Object.defineProperty(
+      contentType,
+      'Fields',
+      Object.getOwnPropertyDescriptor(contentType, 'fields')
+    );
+    delete contentType['fields'];
+    
     const contentTypeCreated = await ContentType.create(
       contentType,
       {
-        include: Field
+        include: {
+          model: Field,
+        }
       }
     );
 
-    return contentTypeCreated;
+    return {
+      id: contentTypeCreated.id,
+      name: contentTypeCreated.name,
+      updatedAt: contentTypeCreated.updatedAt,
+      createdAt: contentTypeCreated.createdAt,
+      fields: contentTypeCreated.Fields
+    };
   }
 
   /**
@@ -79,6 +96,8 @@ class ContentTypeService {
     if (contentType === undefined || contentType === null) {
       throw new ServerError('Content type with given ID not found.', 404);
     }
+
+    return contentType;
   }
 
   async throwIfInstancesExist(contentType) {
@@ -155,6 +174,26 @@ class ContentTypeService {
 
     const newField = await contentType.createField(fieldInfo);
     return newField ?? fieldInfo;
+  }
+
+  /**
+   * Return all fields of a content type, in order 
+   * so that the latest created is the last element.
+   * @param {number} contentTypeId 
+   */
+  async getAllFields(contentTypeId) {
+    const contentType = await this.getContentTypeOrThrow(contentTypeId);
+    console.log(contentType);
+    const fields = await Field.findAll({
+      where: {
+        contentTypeId: contentType.id
+      },
+      order: [
+        ['createdAt', 'ASC']
+      ]
+    });
+
+    return fields;
   }
 }
 

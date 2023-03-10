@@ -43,3 +43,16 @@ export const renameFieldController = async (req, res) => {
   res.status(200);
   res.json(removedField);
 };
+
+/**
+ * List the fields of a content type.
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
+export const listContentTypeFieldsController = async (req, res) => {
+  const contentTypeId = req.params.contentTypeId;
+  const contentTypeFields = await contentTypeService.getAllFields(contentTypeId);
+
+  res.status(200);
+  res.json(contentTypeFields);
+};
