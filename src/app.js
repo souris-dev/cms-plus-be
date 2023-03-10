@@ -1,6 +1,6 @@
 import express from 'express';
 import cmsRoute from './routes/cmsRoute.js';
-import healthCheckRoute from './routes/healthcheckRoute.js';
+import healthCheckRoute from './routes/healthCheckRoute.js';
 //import { checkToken } from './utils/middleware/auth.js';
 
 const app = express();
